@@ -3,7 +3,7 @@ name: release
 on: push
 
 jobs:
-  build:
+  jar:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -13,13 +13,41 @@ jobs:
         with:
           java-version: "adopt@1.8"
       - name: Build
-        run: sbt publishLocal nativeImage
+        run: sbt publishLocal
+      - name: Package
+        run: mv target/scala-3.0.0/scalad_3-0.1.0.jar scalad.jar
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: sbt nativeImage
+      - name: Package
+        run: tar -czvf scalad-linux.tar.gz target/native-image/scalad
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Build
+        run: sbt nativeImage
+      - name: Package
+        run: tar -czvf scalad-windows.tar.gz target/native-image/scalad.exe
+  macos:
+    runs-on: macos-latest
+    steps:
+      - name: Build
+        run: sbt nativeImage
+      - name: Package
+        run: tar -czvf scalad-macos.tar.gz target/native-image/scalad
+  release:
+    runs-on: ubuntu-latest
+    steps:
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            target/native-image/scalad
-            target/scala-3.0.0/scalad_3-0.1.0.jar
+            scalad.jar
+            scalad-linux.tar.gz
+            scalad-windows.tar.gz
+            scalad-macos.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
