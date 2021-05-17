@@ -13,9 +13,9 @@ jobs:
         with:
           java-version: "adopt@1.8"
       - name: Build
-        run: sbt publishLocal
-      - name: Package
-        run: mv target/scala-3.0.0/scalad_3-0.1.0.jar scalad.jar
+        run: |
+          sbt publishLocal
+          mv target/scala-3.0.0/scalad_3-0.1.0.jar scalad.jar
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
@@ -31,9 +31,9 @@ jobs:
         with:
           java-version: "adopt@1.8"
       - name: Build
-        run: sbt nativeImage
-      - name: Package
-        run: tar -czvf scalad-linux.tar.gz target/native-image/scalad
+        run: |
+          sbt nativeImage
+          tar -czvf scalad-linux.tar.gz target/native-image/scalad
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
@@ -53,13 +53,9 @@ jobs:
           java-version: "adopt@1.8"
       - name: Build
         shell: bash
-        run: sbt nativeImage
-      - name: Package
-        shell: bash
         run: |
-          ls target/native-image/scalad
-          ls target/native-image
-          mv target/native-image/scalad scalad.exe
+          sbt nativeImage
+          mv D:\a\scalad\scalad\target\native-image\scalad scalad.exe
           tar -czvf scalad-windows.tar.gz scalad.exe
       - name: Upload
         uses: actions/upload-artifact@v2
