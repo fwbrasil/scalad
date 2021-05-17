@@ -16,6 +16,11 @@ jobs:
         run: sbt publishLocal
       - name: Package
         run: mv target/scala-3.0.0/scalad_3-0.1.0.jar scalad.jar
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: scalad.jar
+          path: scalad.jar
   linux:
     runs-on: ubuntu-latest
     steps:
@@ -29,6 +34,11 @@ jobs:
         run: sbt nativeImage
       - name: Package
         run: tar -czvf scalad-linux.tar.gz target/native-image/scalad
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: scalad-linux.tar.gz
+          path: scalad-linux.tar.gz
   windows:
     runs-on: windows-latest
     steps:
@@ -41,7 +51,12 @@ jobs:
       - name: Build
         run: sbt nativeImage
       - name: Package
-        run: tar -czvf scalad-windows.tar.gz target/native-image/scalad.exe
+        run: zip scalad-windows.zip target/native-image/scalad.exe
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: scalad-windows.zip
+          path: scalad-windows.zip
   macos:
     runs-on: macos-latest
     steps:
@@ -55,9 +70,27 @@ jobs:
         run: sbt nativeImage
       - name: Package
         run: tar -czvf scalad-macos.tar.gz target/native-image/scalad
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: scalad-macos.tar.gz
+          path: scalad-macos.tar.gz
   release:
+    needs: |
+      jar
+      linux
+      windows
+      macos
     runs-on: ubuntu-latest
     steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: |
+            scalad.jar
+            scalad-linux.tar.gz
+            scalad-windows.zip
+            scalad-macos.tar.gz
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -65,7 +98,7 @@ jobs:
           files: |
             scalad.jar
             scalad-linux.tar.gz
-            scalad-windows.tar.gz
+            scalad-windows.zip
             scalad-macos.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
