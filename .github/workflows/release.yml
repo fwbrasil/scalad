@@ -19,6 +19,12 @@ jobs:
   linux:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.8"
       - name: Build
         run: sbt nativeImage
       - name: Package
@@ -26,6 +32,12 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.8"
       - name: Build
         run: sbt nativeImage
       - name: Package
@@ -33,6 +45,12 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: "adopt@1.8"
       - name: Build
         run: sbt nativeImage
       - name: Package
