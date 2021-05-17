@@ -55,6 +55,7 @@ jobs:
         shell: bash
         run: sbt nativeImage
       - name: Package
+        shell: bash
         run: |
           ls -la target/native-image/scalad
           mv target/native-image/scalad scalad.exe
