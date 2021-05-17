@@ -61,13 +61,8 @@ jobs:
     needs: [ jar, linux, macos ]
     runs-on: ubuntu-latest
     steps:
-      - name: Download a single artifact
+      - name: Download all workflow run artifacts
         uses: actions/download-artifact@v2
-        with:
-          name: |
-            scalad.jar
-            scalad-linux.tar.gz
-            scalad-macos.tar.gz
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
