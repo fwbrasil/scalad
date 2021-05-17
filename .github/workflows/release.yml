@@ -76,11 +76,7 @@ jobs:
           name: scalad-macos.tar.gz
           path: scalad-macos.tar.gz
   release:
-    needs: |
-      jar
-      linux
-      windows
-      macos
+    needs: [ jar, linux, windows, macos ]
     runs-on: ubuntu-latest
     steps:
       - name: Download a single artifact
