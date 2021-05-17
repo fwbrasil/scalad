@@ -57,6 +57,8 @@ jobs:
       - name: Package
         shell: bash
         run: |
+          ls target/native-image/scalad
+          ls target/native-image
           mv target/native-image/scalad scalad.exe
           tar -czvf scalad-windows.tar.gz scalad.exe
       - name: Upload
