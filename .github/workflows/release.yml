@@ -44,19 +44,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Configure git
+        run: "git config --global core.autocrlf false"
+        shell: bash
       - name: Setup Scala
         uses: olafurpg/setup-scala@v10
         with:
           java-version: "adopt@1.8"
       - name: Build
+        shell: bash
         run: sbt nativeImage
       - name: Package
-        run: zip scalad-windows.zip target/native-image/scalad.exe
+        run: tar -czvf  scalad-windows.tar.gz target/native-image/scalad.exe
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: scalad-windows.zip
-          path: scalad-windows.zip
+          name: scalad-windows.tar.gz
+          path: scalad-windows.tar.gz
   macos:
     runs-on: macos-latest
     steps:
@@ -85,7 +89,7 @@ jobs:
           name: |
             scalad.jar
             scalad-linux.tar.gz
-            scalad-windows.zip
+            scalad-windows.tar.gz
             scalad-macos.tar.gz
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -94,7 +98,7 @@ jobs:
           files: |
             scalad.jar
             scalad-linux.tar.gz
-            scalad-windows.zip
+            scalad-windows.tar.gz
             scalad-macos.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
