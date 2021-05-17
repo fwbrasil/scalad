@@ -55,7 +55,8 @@ jobs:
         shell: bash
         run: |
           sbt nativeImage
-          mv D:/a/scalad/scalad/target/native-image/scalad scalad.exe
+          ls ./target/native-image
+          mv ./target/native-image/scalad scalad.exe
           tar -czvf scalad-windows.tar.gz scalad.exe
       - name: Upload
         uses: actions/upload-artifact@v2
